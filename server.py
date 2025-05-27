@@ -8,7 +8,6 @@ This server provides tools to:
 """
 
 import os
-from typing import Dict, List
 
 from mcp.server.fastmcp import FastMCP
 from agno.agent import Agent
@@ -40,149 +39,6 @@ from agno.models.ibm import WatsonX
 
 # Create the MCP server instance
 mcp = FastMCP("outsource-mcp")
-
-# Model configurations
-MODEL_PROVIDERS = {
-    "openai": {
-        "env_key": "OPENAI_API_KEY",
-        "models": [
-            "gpt-4o",
-            "gpt-4o-mini",
-            "gpt-4-turbo",
-            "gpt-3.5-turbo",
-            "dall-e-3",
-            "dall-e-2",
-        ],
-        "text_models": ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
-        "image_models": ["dall-e-3", "dall-e-2"],
-    },
-    "anthropic": {
-        "env_key": "ANTHROPIC_API_KEY",
-        "models": [
-            "claude-3-5-sonnet-20241022",
-            "claude-3-5-haiku-20241022",
-            "claude-3-opus-20240229",
-        ],
-        "text_models": [
-            "claude-3-5-sonnet-20241022",
-            "claude-3-5-haiku-20241022",
-            "claude-3-opus-20240229",
-        ],
-        "image_models": [],
-    },
-    "google": {
-        "env_key": "GOOGLE_API_KEY",
-        "models": ["gemini-2.0-flash-exp", "gemini-1.5-pro", "gemini-1.5-flash"],
-        "text_models": ["gemini-2.0-flash-exp", "gemini-1.5-pro", "gemini-1.5-flash"],
-        "image_models": [],
-    },
-    "groq": {
-        "env_key": "GROQ_API_KEY",
-        "models": [
-            "llama-3.3-70b-versatile",
-            "llama-3.1-8b-instant",
-            "mixtral-8x7b-32768",
-        ],
-        "text_models": [
-            "llama-3.3-70b-versatile",
-            "llama-3.1-8b-instant",
-            "mixtral-8x7b-32768",
-        ],
-        "image_models": [],
-    },
-    "deepseek": {
-        "env_key": "DEEPSEEK_API_KEY",
-        "models": ["deepseek-chat", "deepseek-coder"],
-        "text_models": ["deepseek-chat", "deepseek-coder"],
-        "image_models": [],
-    },
-    "xai": {
-        "env_key": "XAI_API_KEY",
-        "models": ["grok-beta", "grok-vision-beta"],
-        "text_models": ["grok-beta", "grok-vision-beta"],
-        "image_models": [],
-    },
-    "perplexity": {
-        "env_key": "PERPLEXITY_API_KEY",
-        "models": ["sonar", "sonar-pro"],
-        "text_models": ["sonar", "sonar-pro"],
-        "image_models": [],
-    },
-    "cohere": {
-        "env_key": "COHERE_API_KEY",
-        "models": ["command-r-plus", "command-r", "command"],
-        "text_models": ["command-r-plus", "command-r", "command"],
-        "image_models": [],
-    },
-    "fireworks": {
-        "env_key": "FIREWORKS_API_KEY",
-        "models": ["accounts/fireworks/models/llama-v3p1-8b-instruct"],
-        "text_models": ["accounts/fireworks/models/llama-v3p1-8b-instruct"],
-        "image_models": [],
-    },
-    "huggingface": {
-        "env_key": "HUGGINGFACE_API_KEY",
-        "models": ["meta-llama/Llama-2-7b-chat-hf"],
-        "text_models": ["meta-llama/Llama-2-7b-chat-hf"],
-        "image_models": [],
-    },
-    "mistral": {
-        "env_key": "MISTRAL_API_KEY",
-        "models": [
-            "mistral-large-latest",
-            "mistral-medium-latest",
-            "mistral-small-latest",
-        ],
-        "text_models": [
-            "mistral-large-latest",
-            "mistral-medium-latest",
-            "mistral-small-latest",
-        ],
-        "image_models": [],
-    },
-    "nvidia": {
-        "env_key": "NVIDIA_API_KEY",
-        "models": ["meta/llama3-70b-instruct"],
-        "text_models": ["meta/llama3-70b-instruct"],
-        "image_models": [],
-    },
-    "ollama": {
-        "env_key": "OLLAMA_HOST",
-        "models": ["llama3", "mistral", "codellama"],
-        "text_models": ["llama3", "mistral", "codellama"],
-        "image_models": [],
-    },
-    "openrouter": {
-        "env_key": "OPENROUTER_API_KEY",
-        "models": ["openai/gpt-4", "anthropic/claude-3-opus"],
-        "text_models": ["openai/gpt-4", "anthropic/claude-3-opus"],
-        "image_models": [],
-    },
-    "together": {
-        "env_key": "TOGETHER_API_KEY",
-        "models": ["togethercomputer/llama-2-70b-chat"],
-        "text_models": ["togethercomputer/llama-2-70b-chat"],
-        "image_models": [],
-    },
-    "cerebras": {
-        "env_key": "CEREBRAS_API_KEY",
-        "models": ["llama3.1-8b", "llama3.1-70b"],
-        "text_models": ["llama3.1-8b", "llama3.1-70b"],
-        "image_models": [],
-    },
-    "deepinfra": {
-        "env_key": "DEEPINFRA_API_KEY",
-        "models": ["meta-llama/Llama-2-70b-chat-hf"],
-        "text_models": ["meta-llama/Llama-2-70b-chat-hf"],
-        "image_models": [],
-    },
-    "sambanova": {
-        "env_key": "SAMBANOVA_API_KEY",
-        "models": ["Meta-Llama-3.1-8B-Instruct"],
-        "text_models": ["Meta-Llama-3.1-8B-Instruct"],
-        "image_models": [],
-    },
-}
 
 
 def get_model_class(model_name: str):
@@ -263,33 +119,6 @@ def get_model_class(model_name: str):
         raise ValueError(f"Unknown model: {model_name}")
 
 
-@mcp.tool()
-def get_models() -> Dict[str, List[str]]:
-    """
-    Detect available AI models based on environment variables.
-
-    Returns a dictionary with categories:
-    - all_models: List of all available models
-    - text_models: Models that can generate text
-    - image_models: Models that can generate images
-    - by_provider: Models grouped by provider
-    """
-    available_models = {
-        "all_models": [],
-        "text_models": [],
-        "image_models": [],
-        "by_provider": {},
-    }
-
-    for provider, config in MODEL_PROVIDERS.items():
-        if os.getenv(config["env_key"]):
-            available_models["all_models"].extend(config["models"])
-            available_models["text_models"].extend(config["text_models"])
-            available_models["image_models"].extend(config["image_models"])
-            available_models["by_provider"][provider] = config["models"]
-
-    return available_models
-
 
 @mcp.tool()
 async def outsource_text(model: str, prompt: str) -> str:
@@ -303,14 +132,6 @@ async def outsource_text(model: str, prompt: str) -> str:
     Returns:
         The generated text response
     """
-    # Validate model is available
-    available = get_models()
-    if model not in available["all_models"]:
-        return f"Error: Model '{model}' is not available. Available models: {', '.join(available['all_models'])}"
-
-    if model not in available["text_models"]:
-        return f"Error: Model '{model}' does not support text generation."
-
     try:
         # Get the appropriate model class
         model_class = get_model_class(model)
@@ -347,14 +168,6 @@ async def outsource_image(model: str, prompt: str) -> str:
     Returns:
         Base64 encoded image data or error message
     """
-    # Validate model is available
-    available = get_models()
-    if model not in available["all_models"]:
-        return f"Error: Model '{model}' is not available. Available models: {', '.join(available['all_models'])}"
-
-    if model not in available["image_models"]:
-        return f"Error: Model '{model}' does not support image generation. Available image models: {', '.join(available['image_models'])}"
-
     try:
         # For OpenAI image generation, we need to use their API directly
         # as Agno agents are primarily for text-based interactions

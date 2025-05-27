@@ -30,14 +30,8 @@ async def test_server_integration():
 
             # Verify we have the expected tools
             tool_names = [tool.name for tool in tools.tools]
-            assert "get_models" in tool_names
             assert "outsource_text" in tool_names
             assert "outsource_image" in tool_names
-
-            # Test get_models tool
-            print("\n\nTesting get_models tool...")
-            result = await session.call_tool("get_models", {})
-            print(f"Result: {result.content}")
 
             # Test outsource_text if OpenAI key is available
             if os.getenv("OPENAI_API_KEY"):

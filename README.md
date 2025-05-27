@@ -6,18 +6,11 @@ This project uses [Agno](https://github.com/agno-agi/agno), a powerful framework
 
 ## Tools
 
-### get_models
-Detects available AI models based on your configured API keys. Returns a comprehensive list of models organized by:
-- All available models across providers
-- Text generation capable models
-- Image generation capable models
-- Models grouped by provider (OpenAI, Anthropic, Google)
-
 ### outsource_text
-Creates an Agno agent with a specified model to generate text responses. Pass any available text model and a prompt to get AI-generated content. Supports models from OpenAI (GPT-4, GPT-3.5), Anthropic (Claude), and Google (Gemini).
+Creates an Agno agent with a specified model to generate text responses. Pass any supported model name and a prompt to get AI-generated content. The tool automatically routes to the appropriate provider based on the model name.
 
 ### outsource_image
-Creates an Agno agent to generate images using DALL-E models. Currently supports DALL-E 3 and DALL-E 2 for image generation. Returns base64 encoded image data that can be directly used in applications.
+Generates images using AI models. Currently supports DALL-E 3 and DALL-E 2 for image generation. Returns base64 encoded image data that can be directly used in applications.
 
 ## Installation
 
@@ -52,14 +45,25 @@ Add to your Claude Desktop configuration:
         "GROQ_API_KEY": "your-groq-key",
         "DEEPSEEK_API_KEY": "your-deepseek-key",
         "XAI_API_KEY": "your-xai-key",
-        "PERPLEXITY_API_KEY": "your-perplexity-key"
+        "PERPLEXITY_API_KEY": "your-perplexity-key",
+        "COHERE_API_KEY": "your-cohere-key",
+        "FIREWORKS_API_KEY": "your-fireworks-key",
+        "HUGGINGFACE_API_KEY": "your-huggingface-key",
+        "MISTRAL_API_KEY": "your-mistral-key",
+        "NVIDIA_API_KEY": "your-nvidia-key",
+        "OLLAMA_HOST": "http://localhost:11434",
+        "OPENROUTER_API_KEY": "your-openrouter-key",
+        "TOGETHER_API_KEY": "your-together-key",
+        "CEREBRAS_API_KEY": "your-cerebras-key",
+        "DEEPINFRA_API_KEY": "your-deepinfra-key",
+        "SAMBANOVA_API_KEY": "your-sambanova-key"
       }
     }
   }
 }
 ```
 
-Note: The environment variables are optional. Only include the API keys for the providers you want to use. The `get_models` tool will detect which providers are available based on the configured keys.
+Note: The environment variables are optional. Only include the API keys for the providers you want to use.
 
 Or for development:
 
@@ -108,7 +112,19 @@ This MCP server supports all models available through [Agno](https://docs.agno.c
 - **Vercel v0**: Vercel's AI service
 - **Meta Llama**: Direct Meta model access
 
-Note: Each provider requires its corresponding API key to be set as an environment variable. Some providers may require additional dependencies which will be indicated when you try to use them.
+Note: Each provider requires its corresponding API key to be set as an environment variable.
+
+## How It Works
+
+The server automatically routes models to the appropriate provider based on the model name:
+- Models starting with "gpt" or "dall-e" → OpenAI
+- Models starting with "claude" → Anthropic  
+- Models starting with "gemini" → Google
+- Models starting with "llama" or "mixtral" → Groq
+- Models starting with "deepseek" → DeepSeek
+- And many more patterns for other providers
+
+If a model name doesn't match any known pattern, the server will raise an error with the unrecognized model name.
 
 ## Development
 
