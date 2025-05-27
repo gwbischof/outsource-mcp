@@ -172,9 +172,3 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-
-# Test files
-test_server.py
-
-# uv lock file
-uv.lock
