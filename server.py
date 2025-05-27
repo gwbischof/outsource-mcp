@@ -13,7 +13,6 @@ from typing import Dict, List
 from mcp.server.fastmcp import FastMCP
 from agno.agent import Agent
 
-# Core imports that are always available
 from agno.models.openai import OpenAIChat
 from agno.models.anthropic import Claude
 from agno.models.google import Gemini
@@ -21,9 +20,23 @@ from agno.models.groq import Groq
 from agno.models.deepseek import DeepSeek
 from agno.models.xai import xAI
 from agno.models.perplexity import Perplexity
-
-# Optional imports - these are imported on demand to avoid dependency issues
-# The imports are handled in get_model_class() function
+from agno.models.cohere import Cohere
+from agno.models.fireworks import Fireworks
+from agno.models.huggingface import HuggingFace
+from agno.models.mistral import MistralChat
+from agno.models.nvidia import Nvidia
+from agno.models.ollama import Ollama
+from agno.models.openrouter import OpenRouter
+from agno.models.sambanova import Sambanova
+from agno.models.together import Together
+from agno.models.litellm import LiteLLM
+from agno.models.vercel import v0
+from agno.models.aws import AwsBedrock
+from agno.models.azure import AzureAIFoundry
+from agno.models.cerebras import Cerebras
+from agno.models.meta import Llama
+from agno.models.deepinfra import DeepInfra
+from agno.models.ibm import WatsonX
 
 # Create the MCP server instance
 mcp = FastMCP("outsource-mcp")
@@ -174,87 +187,80 @@ MODEL_PROVIDERS = {
 
 def get_model_class(model_name: str):
     """Get the appropriate model class based on model name."""
-    # Core models (always imported)
+    # OpenAI models
     if model_name.startswith(("gpt", "dall-e")):
         return OpenAIChat
+    # Anthropic models
     elif model_name.startswith("claude"):
         return Claude
+    # Google models
     elif model_name.startswith("gemini"):
         return Gemini
+    # Groq models
     elif any(model_name.startswith(x) for x in ["llama-3.3", "llama-3.1", "mixtral"]):
         return Groq
+    # DeepSeek models
     elif model_name.startswith("deepseek"):
         return DeepSeek
+    # xAI models
     elif model_name.startswith("grok"):
         return xAI
+    # Perplexity models
     elif model_name.startswith("sonar"):
         return Perplexity
-
-    # Optional models (imported on demand)
-    try:
-        # Cohere models
-        if model_name.startswith("command"):
-            from agno.models.cohere import Cohere
-
-            return Cohere
-        # Fireworks models
-        elif "fireworks" in model_name:
-            from agno.models.fireworks import Fireworks
-
-            return Fireworks
-        # HuggingFace models
-        elif "/" in model_name and "llama" in model_name.lower():
-            from agno.models.huggingface import HuggingFace
-
-            return HuggingFace
-        # Mistral models
-        elif model_name.startswith("mistral"):
-            from agno.models.mistral import MistralChat
-
-            return MistralChat
-        # NVIDIA models
-        elif model_name.startswith("meta/"):
-            from agno.models.nvidia import Nvidia
-
-            return Nvidia
-        # Ollama models (local)
-        elif model_name in ["llama3", "mistral", "codellama"]:
-            from agno.models.ollama import Ollama
-
-            return Ollama
-        # OpenRouter models
-        elif "/" in model_name and any(
-            x in model_name for x in ["openai/", "anthropic/"]
-        ):
-            from agno.models.openrouter import OpenRouter
-
-            return OpenRouter
-        # Together models
-        elif "togethercomputer/" in model_name:
-            from agno.models.together import Together
-
-            return Together
-        # Cerebras models
-        elif model_name.startswith("llama3.1"):
-            from agno.models.cerebras import Cerebras
-
-            return Cerebras
-        # DeepInfra models
-        elif "meta-llama/" in model_name:
-            from agno.models.deepinfra import DeepInfra
-
-            return DeepInfra
-        # SambaNova models
-        elif "Meta-Llama" in model_name:
-            from agno.models.sambanova import Sambanova
-
-            return Sambanova
-        else:
-            raise ValueError(f"Unknown model: {model_name}")
-    except ImportError as e:
-        raise ImportError(
-            f"Provider for model '{model_name}' requires additional dependencies: {str(e)}"
-        )
+    # Cohere models
+    elif model_name.startswith("command"):
+        return Cohere
+    # Fireworks models
+    elif "fireworks" in model_name:
+        return Fireworks
+    # HuggingFace models
+    elif "/" in model_name and "llama" in model_name.lower():
+        return HuggingFace
+    # Mistral models
+    elif model_name.startswith("mistral"):
+        return MistralChat
+    # NVIDIA models
+    elif model_name.startswith("meta/"):
+        return Nvidia
+    # Ollama models (local)
+    elif model_name in ["llama3", "mistral", "codellama"]:
+        return Ollama
+    # OpenRouter models
+    elif "/" in model_name and any(x in model_name for x in ["openai/", "anthropic/"]):
+        return OpenRouter
+    # Together models
+    elif "togethercomputer/" in model_name:
+        return Together
+    # Cerebras models
+    elif model_name.startswith("llama3.1"):
+        return Cerebras
+    # DeepInfra models
+    elif "meta-llama/" in model_name:
+        return DeepInfra
+    # SambaNova models
+    elif "Meta-Llama" in model_name:
+        return Sambanova
+    # LiteLLM models
+    elif "litellm" in model_name.lower():
+        return LiteLLM
+    # Vercel v0 models
+    elif "v0" in model_name.lower():
+        return v0
+    # AWS Bedrock models
+    elif "bedrock" in model_name.lower() or model_name.startswith("amazon."):
+        return AwsBedrock
+    # Azure AI Foundry models
+    elif "azure" in model_name.lower() or model_name.startswith("microsoft"):
+        return AzureAIFoundry
+    # Meta Llama models
+    elif model_name.startswith("meta-llama/") and "LLAMA_API_KEY" in os.environ:
+        return Llama
+    # IBM WatsonX models
+    elif "watsonx" in model_name.lower() or "watson" in model_name.lower():
+        return WatsonX
+    else:
+        raise ValueError(f"Unknown model: {model_name}")
 
 
 @mcp.tool()
