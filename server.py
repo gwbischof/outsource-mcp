@@ -15,6 +15,10 @@ from agno.agent import Agent
 from agno.models.openai import OpenAIChat
 from agno.models.anthropic import Claude
 from agno.models.google import Gemini
+from agno.models.groq import Groq
+from agno.models.deepseek import DeepSeek
+from agno.models.xai import xAI
+from agno.models.perplexity import Perplexity
 
 # Create the MCP server instance
 mcp = FastMCP("outsource-mcp")
@@ -54,6 +58,38 @@ MODEL_PROVIDERS = {
         "text_models": ["gemini-2.0-flash-exp", "gemini-1.5-pro", "gemini-1.5-flash"],
         "image_models": [],
     },
+    "groq": {
+        "env_key": "GROQ_API_KEY",
+        "models": [
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "mixtral-8x7b-32768",
+        ],
+        "text_models": [
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant",
+            "mixtral-8x7b-32768",
+        ],
+        "image_models": [],
+    },
+    "deepseek": {
+        "env_key": "DEEPSEEK_API_KEY",
+        "models": ["deepseek-chat", "deepseek-coder"],
+        "text_models": ["deepseek-chat", "deepseek-coder"],
+        "image_models": [],
+    },
+    "xai": {
+        "env_key": "XAI_API_KEY",
+        "models": ["grok-beta", "grok-vision-beta"],
+        "text_models": ["grok-beta", "grok-vision-beta"],
+        "image_models": [],
+    },
+    "perplexity": {
+        "env_key": "PERPLEXITY_API_KEY",
+        "models": ["sonar", "sonar-pro"],
+        "text_models": ["sonar", "sonar-pro"],
+        "image_models": [],
+    },
 }
 
 
@@ -65,6 +101,14 @@ def get_model_class(model_name: str):
         return Claude
     elif model_name.startswith("gemini"):
         return Gemini
+    elif model_name.startswith(("llama", "mixtral")):
+        return Groq
+    elif model_name.startswith("deepseek"):
+        return DeepSeek
+    elif model_name.startswith("grok"):
+        return xAI
+    elif model_name.startswith("sonar"):
+        return Perplexity
     else:
         raise ValueError(f"Unknown model: {model_name}")
 
