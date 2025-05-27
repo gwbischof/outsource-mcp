@@ -12,22 +12,6 @@ Creates an Agno agent with a specified model to generate text responses. Pass an
 ### outsource_image
 Generates images using AI models. Currently supports DALL-E 3 and DALL-E 2 for image generation. Returns base64 encoded image data that can be directly used in applications.
 
-## Installation
-
-### Via uvx (from GitHub)
-
-```bash
-uvx --from git+https://github.com/yourusername/outsource-mcp.git outsource-mcp
-```
-
-### From source
-
-```bash
-git clone https://github.com/yourusername/outsource-mcp.git
-cd outsource-mcp
-uv pip install -e .
-```
-
 ## Claude Desktop Integration
 
 Add to your Claude Desktop configuration:
