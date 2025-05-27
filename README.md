@@ -76,29 +76,39 @@ Or for development:
 
 ## Supported Models
 
-### OpenAI
-- Text: gpt-4o, gpt-4o-mini, gpt-4-turbo, gpt-3.5-turbo
-- Image: dall-e-3, dall-e-2
+This MCP server supports all models available through [Agno](https://docs.agno.com/models/introduction#supported-models):
 
-### Anthropic
-- Text: claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022, claude-3-opus-20240229
+### Core Providers
+- **OpenAI**: gpt-4o, gpt-4o-mini, gpt-4-turbo, gpt-3.5-turbo, dall-e-3, dall-e-2
+- **Anthropic**: claude-3-5-sonnet, claude-3-5-haiku, claude-3-opus
+- **Google**: gemini-2.0-flash-exp, gemini-1.5-pro, gemini-1.5-flash
+- **Groq**: llama-3.3-70b-versatile, llama-3.1-8b-instant, mixtral-8x7b
+- **DeepSeek**: deepseek-chat, deepseek-coder
+- **xAI**: grok-beta, grok-vision-beta
+- **Perplexity**: sonar, sonar-pro
 
-### Google
-- Text: gemini-2.0-flash-exp, gemini-1.5-pro, gemini-1.5-flash
+### Additional Providers
+- **Cohere**: command-r-plus, command-r, command
+- **Fireworks**: Various open source models
+- **HuggingFace**: Access to HuggingFace model hub
+- **Mistral**: mistral-large, mistral-medium, mistral-small
+- **NVIDIA**: Meta Llama models via NVIDIA API
+- **Ollama**: Local models (llama3, mistral, codellama)
+- **OpenRouter**: Access to multiple providers
+- **Together AI**: Open source models
+- **Cerebras**: Fast inference models
+- **DeepInfra**: Optimized open source models
+- **SambaNova**: High-performance models
 
-### Groq
-- Text: llama-3.3-70b-versatile, llama-3.1-8b-instant, mixtral-8x7b-32768
+### Enterprise Providers (Supported by Agno, configuration needed)
+- **AWS Bedrock**: Access AWS-hosted models
+- **Azure AI**: Azure-hosted models including OpenAI
+- **IBM WatsonX**: IBM's AI models
+- **LiteLLM**: Universal model interface
+- **Vercel v0**: Vercel's AI service
+- **Meta Llama**: Direct Meta model access
 
-### DeepSeek
-- Text: deepseek-chat, deepseek-coder
-
-### xAI
-- Text: grok-beta, grok-vision-beta
-
-### Perplexity
-- Text: sonar, sonar-pro
-
-This MCP server supports all models available through [Agno](https://docs.agno.com/models/introduction#supported-models). Additional providers like AWS Bedrock, Azure, Cerebras, Cohere, and others can be added by extending the MODEL_PROVIDERS configuration.
+Note: Each provider requires its corresponding API key to be set as an environment variable. Some providers may require additional dependencies which will be indicated when you try to use them.
 
 ## Development
 

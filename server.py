@@ -12,6 +12,8 @@ from typing import Dict, List
 
 from mcp.server.fastmcp import FastMCP
 from agno.agent import Agent
+
+# Core imports that are always available
 from agno.models.openai import OpenAIChat
 from agno.models.anthropic import Claude
 from agno.models.google import Gemini
@@ -19,6 +21,9 @@ from agno.models.groq import Groq
 from agno.models.deepseek import DeepSeek
 from agno.models.xai import xAI
 from agno.models.perplexity import Perplexity
+
+# Optional imports - these are imported on demand to avoid dependency issues
+# The imports are handled in get_model_class() function
 
 # Create the MCP server instance
 mcp = FastMCP("outsource-mcp")
@@ -90,18 +95,93 @@ MODEL_PROVIDERS = {
         "text_models": ["sonar", "sonar-pro"],
         "image_models": [],
     },
+    "cohere": {
+        "env_key": "COHERE_API_KEY",
+        "models": ["command-r-plus", "command-r", "command"],
+        "text_models": ["command-r-plus", "command-r", "command"],
+        "image_models": [],
+    },
+    "fireworks": {
+        "env_key": "FIREWORKS_API_KEY",
+        "models": ["accounts/fireworks/models/llama-v3p1-8b-instruct"],
+        "text_models": ["accounts/fireworks/models/llama-v3p1-8b-instruct"],
+        "image_models": [],
+    },
+    "huggingface": {
+        "env_key": "HUGGINGFACE_API_KEY",
+        "models": ["meta-llama/Llama-2-7b-chat-hf"],
+        "text_models": ["meta-llama/Llama-2-7b-chat-hf"],
+        "image_models": [],
+    },
+    "mistral": {
+        "env_key": "MISTRAL_API_KEY",
+        "models": [
+            "mistral-large-latest",
+            "mistral-medium-latest",
+            "mistral-small-latest",
+        ],
+        "text_models": [
+            "mistral-large-latest",
+            "mistral-medium-latest",
+            "mistral-small-latest",
+        ],
+        "image_models": [],
+    },
+    "nvidia": {
+        "env_key": "NVIDIA_API_KEY",
+        "models": ["meta/llama3-70b-instruct"],
+        "text_models": ["meta/llama3-70b-instruct"],
+        "image_models": [],
+    },
+    "ollama": {
+        "env_key": "OLLAMA_HOST",
+        "models": ["llama3", "mistral", "codellama"],
+        "text_models": ["llama3", "mistral", "codellama"],
+        "image_models": [],
+    },
+    "openrouter": {
+        "env_key": "OPENROUTER_API_KEY",
+        "models": ["openai/gpt-4", "anthropic/claude-3-opus"],
+        "text_models": ["openai/gpt-4", "anthropic/claude-3-opus"],
+        "image_models": [],
+    },
+    "together": {
+        "env_key": "TOGETHER_API_KEY",
+        "models": ["togethercomputer/llama-2-70b-chat"],
+        "text_models": ["togethercomputer/llama-2-70b-chat"],
+        "image_models": [],
+    },
+    "cerebras": {
+        "env_key": "CEREBRAS_API_KEY",
+        "models": ["llama3.1-8b", "llama3.1-70b"],
+        "text_models": ["llama3.1-8b", "llama3.1-70b"],
+        "image_models": [],
+    },
+    "deepinfra": {
+        "env_key": "DEEPINFRA_API_KEY",
+        "models": ["meta-llama/Llama-2-70b-chat-hf"],
+        "text_models": ["meta-llama/Llama-2-70b-chat-hf"],
+        "image_models": [],
+    },
+    "sambanova": {
+        "env_key": "SAMBANOVA_API_KEY",
+        "models": ["Meta-Llama-3.1-8B-Instruct"],
+        "text_models": ["Meta-Llama-3.1-8B-Instruct"],
+        "image_models": [],
+    },
 }
 
 
 def get_model_class(model_name: str):
     """Get the appropriate model class based on model name."""
+    # Core models (always imported)
     if model_name.startswith(("gpt", "dall-e")):
         return OpenAIChat
     elif model_name.startswith("claude"):
         return Claude
     elif model_name.startswith("gemini"):
         return Gemini
-    elif model_name.startswith(("llama", "mixtral")):
+    elif any(model_name.startswith(x) for x in ["llama-3.3", "llama-3.1", "mixtral"]):
         return Groq
     elif model_name.startswith("deepseek"):
         return DeepSeek
@@ -109,8 +189,72 @@ def get_model_class(model_name: str):
         return xAI
     elif model_name.startswith("sonar"):
         return Perplexity
-    else:
-        raise ValueError(f"Unknown model: {model_name}")
+
+    # Optional models (imported on demand)
+    try:
+        # Cohere models
+        if model_name.startswith("command"):
+            from agno.models.cohere import Cohere
+
+            return Cohere
+        # Fireworks models
+        elif "fireworks" in model_name:
+            from agno.models.fireworks import Fireworks
+
+            return Fireworks
+        # HuggingFace models
+        elif "/" in model_name and "llama" in model_name.lower():
+            from agno.models.huggingface import HuggingFace
+
+            return HuggingFace
+        # Mistral models
+        elif model_name.startswith("mistral"):
+            from agno.models.mistral import MistralChat
+
+            return MistralChat
+        # NVIDIA models
+        elif model_name.startswith("meta/"):
+            from agno.models.nvidia import Nvidia
+
+            return Nvidia
+        # Ollama models (local)
+        elif model_name in ["llama3", "mistral", "codellama"]:
+            from agno.models.ollama import Ollama
+
+            return Ollama
+        # OpenRouter models
+        elif "/" in model_name and any(
+            x in model_name for x in ["openai/", "anthropic/"]
+        ):
+            from agno.models.openrouter import OpenRouter
+
+            return OpenRouter
+        # Together models
+        elif "togethercomputer/" in model_name:
+            from agno.models.together import Together
+
+            return Together
+        # Cerebras models
+        elif model_name.startswith("llama3.1"):
+            from agno.models.cerebras import Cerebras
+
+            return Cerebras
+        # DeepInfra models
+        elif "meta-llama/" in model_name:
+            from agno.models.deepinfra import DeepInfra
+
+            return DeepInfra
+        # SambaNova models
+        elif "Meta-Llama" in model_name:
+            from agno.models.sambanova import Sambanova
+
+            return Sambanova
+        else:
+            raise ValueError(f"Unknown model: {model_name}")
+    except ImportError as e:
+        raise ImportError(
+            f"Provider for model '{model_name}' requires additional dependencies: {str(e)}"
+        )
 
 
 @mcp.tool()
