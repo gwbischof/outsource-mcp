@@ -23,9 +23,15 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["."]
 
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
 [dependency-groups]
 dev = [
     "black>=25.1.0",
     "mypy>=1.15.0",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
     "ruff>=0.11.11",
 ]

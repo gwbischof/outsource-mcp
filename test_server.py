@@ -1,15 +1,17 @@
-#!/usr/bin/env python3
 """
-Simple test script for the outsource-mcp server
+Integration test for outsource-mcp server
 """
 
 import asyncio
 import os
+import pytest
 from mcp.client.session import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
 
-async def test_server():
+@pytest.mark.asyncio
+async def test_server_integration():
+    """Test the MCP server integration"""
     # Set up server parameters to run our server
     server_params = StdioServerParameters(
         command="uv",
@@ -28,6 +30,12 @@ async def test_server():
             for tool in tools.tools:
                 print(f"  - {tool.name}: {tool.description}")
 
+            # Verify we have the expected tools
+            tool_names = [tool.name for tool in tools.tools]
+            assert "get_models" in tool_names
+            assert "outsource_text" in tool_names
+            assert "outsource_image" in tool_names
+
             # Test get_models tool
             print("\n\nTesting get_models tool...")
             result = await session.call_tool("get_models", {})
@@ -44,7 +52,15 @@ async def test_server():
                     }
                 )
                 print(f"Result: {result.content}")
-
-
-if __name__ == "__main__":
-    asyncio.run(test_server())
+            else:
+                print("\n\nTesting outsource_text tool...")
+                result = await session.call_tool(
+                    "outsource_text",
+                    {
+                        "model": "gpt-4o-mini",
+                        "prompt": "Write a haiku about MCP servers"
+                    }
+                )
+                print(f"Result: {result.content}")
+                # Verify it returns an error when model is not available
+                assert "Error" in str(result.content)
