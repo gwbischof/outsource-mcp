@@ -2,7 +2,6 @@
 Integration test for outsource-mcp server
 """
 
-import asyncio
 import os
 import pytest
 from mcp.client.session import ClientSession
@@ -14,8 +13,7 @@ async def test_server_integration():
     """Test the MCP server integration"""
     # Set up server parameters to run our server
     server_params = StdioServerParameters(
-        command="uv",
-        args=["run", "python", "server.py"]
+        command="uv", args=["run", "python", "server.py"]
     )
 
     # Connect to the server
@@ -48,8 +46,8 @@ async def test_server_integration():
                     "outsource_text",
                     {
                         "model": "gpt-4o-mini",
-                        "prompt": "Write a haiku about MCP servers"
-                    }
+                        "prompt": "Write a haiku about MCP servers",
+                    },
                 )
                 print(f"Result: {result.content}")
             else:
@@ -58,8 +56,8 @@ async def test_server_integration():
                     "outsource_text",
                     {
                         "model": "gpt-4o-mini",
-                        "prompt": "Write a haiku about MCP servers"
-                    }
+                        "prompt": "Write a haiku about MCP servers",
+                    },
                 )
                 print(f"Result: {result.content}")
                 # Verify it returns an error when model is not available
