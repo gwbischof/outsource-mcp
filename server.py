@@ -177,7 +177,7 @@ async def outsource_image(provider: str, model: str, prompt: str) -> str:
 def main():
     """Entry point for the MCP server."""
     # Run the server
-    mcp.run()
+    mcp.run(transport='stdio')
 
 
 if __name__ == "__main__":
