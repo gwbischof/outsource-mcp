@@ -1,8 +1,39 @@
 # outsource-mcp
 
-An MCP server that allows you to outsource AI tasks to various model providers.
+An MCP (Model Context Protocol) server that enables you to outsource AI tasks to various model providers through a unified interface.
 
-This project uses [Agno](https://github.com/agno-agi/agno), a powerful framework for building AI agents with tool use capabilities.
+Built with [FastMCP](https://github.com/mcp/fastmcp) for the MCP server implementation and [Agno](https://github.com/agno-agi/agno) for AI agent capabilities.
+
+## Features
+
+- 🤖 **Multi-Provider Support**: Access 20+ AI providers through a single interface
+- 📝 **Text Generation**: Generate text using models from OpenAI, Anthropic, Google, and more
+- 🎨 **Image Generation**: Create images using DALL-E 3 and DALL-E 2
+- 🔧 **Simple API**: Consistent interface with just three parameters: provider, model, and prompt
+- 🔑 **Flexible Authentication**: Only configure API keys for the providers you use
+
+## Installation
+
+### Quick Install with uvx
+
+```bash
+uvx --from git+https://github.com/gwbischof/outsource-mcp.git outsource-mcp
+```
+
+### Install from Source
+
+```bash
+git clone https://github.com/gwbischof/outsource-mcp.git
+cd outsource-mcp
+uv pip install -e .
+```
+
+## Quick Start
+
+Once installed and configured, you can use the tools in Claude Desktop:
+
+1. **Generate text**: "Use outsource_text with provider openai, model gpt-4o-mini, and prompt 'Write a haiku about coding'"
+2. **Generate images**: "Use outsource_image with provider openai, model dall-e-3, and prompt 'A futuristic city skyline at sunset'"
 
 ## Tools
 
@@ -15,18 +46,22 @@ Creates an Agno agent with a specified provider and model to generate text respo
 - `prompt`: The text prompt to send to the model
 
 ### outsource_image
-Generates images using AI models. Currently supports OpenAI's DALL-E models.
+Generates images using AI models.
 
 **Arguments:**
 - `provider`: The provider name (currently only "openai" is supported)
 - `model`: The model name ("dall-e-3" or "dall-e-2")
 - `prompt`: The image generation prompt
 
-Returns base64 encoded image data that can be directly used in applications.
+Returns the URL of the generated image.
 
-## Claude Desktop Integration
+> **Note**: Image generation is currently only supported by OpenAI models (DALL-E 2 and DALL-E 3). Other providers only support text generation.
 
-Add to your Claude Desktop configuration:
+## Configuration
+
+### Claude Desktop
+
+Add to your Claude Desktop configuration file:
 
 ```json
 {
@@ -108,7 +143,36 @@ The following providers are supported. Use the provider name (in parentheses) as
 - **Vercel v0** (`vercel` or `v0`) - Vercel AI | [Models](https://sdk.vercel.ai/docs/introduction)
 - **Meta Llama** (`meta`) - Direct Meta access | [Models](https://www.llama.com/get-started/)
 
-Note: Each provider requires its corresponding API key to be set as an environment variable.
+### Environment Variables
+
+Each provider requires its corresponding API key:
+
+| Provider | Environment Variable | Example |
+|----------|---------------------|---------|
+| OpenAI | `OPENAI_API_KEY` | sk-... |
+| Anthropic | `ANTHROPIC_API_KEY` | sk-ant-... |
+| Google | `GOOGLE_API_KEY` | AIza... |
+| Groq | `GROQ_API_KEY` | gsk_... |
+| DeepSeek | `DEEPSEEK_API_KEY` | sk-... |
+| xAI | `XAI_API_KEY` | xai-... |
+| Perplexity | `PERPLEXITY_API_KEY` | pplx-... |
+| Cohere | `COHERE_API_KEY` | ... |
+| Fireworks | `FIREWORKS_API_KEY` | ... |
+| HuggingFace | `HUGGINGFACE_API_KEY` | hf_... |
+| Mistral | `MISTRAL_API_KEY` | ... |
+| NVIDIA | `NVIDIA_API_KEY` | nvapi-... |
+| Ollama | `OLLAMA_HOST` | http://localhost:11434 |
+| OpenRouter | `OPENROUTER_API_KEY` | ... |
+| Together | `TOGETHER_API_KEY` | ... |
+| Cerebras | `CEREBRAS_API_KEY` | ... |
+| DeepInfra | `DEEPINFRA_API_KEY` | ... |
+| SambaNova | `SAMBANOVA_API_KEY` | ... |
+| AWS Bedrock | AWS credentials | Via AWS CLI/SDK |
+| Azure AI | Azure credentials | Via Azure CLI/SDK |
+| IBM WatsonX | `IBM_WATSONX_API_KEY` | ... |
+| Meta Llama | `LLAMA_API_KEY` | ... |
+
+**Note**: Only configure the API keys for providers you plan to use.
 
 ## Examples
 
@@ -145,22 +209,79 @@ prompt: A futuristic cityscape at sunset
 
 ## Development
 
+### Prerequisites
+
+- Python 3.11 or higher
+- [uv](https://github.com/astral-sh/uv) package manager
+
+### Setup
+
+```bash
+git clone https://github.com/gwbischof/outsource-mcp.git
+cd outsource-mcp
+uv sync
+```
+
 ### Testing with MCP Inspector
+
+The MCP Inspector allows you to test the server interactively:
 
 ```bash
 mcp dev server.py
 ```
 
-### Running tests
-**Note:** The integration tests will use your configured API keys.
+### Running Tests
+
+The test suite includes integration tests that verify both text and image generation:
 
 ```bash
+# Run all tests
 uv run pytest
+
+# Run with verbose output
+uv run pytest -v
+
+# Run specific test
+uv run pytest test_server.py::test_server_integration
+```
+
+**Note:** Integration tests require API keys to be set in your environment.
+
+### Code Quality
+
+```bash
+# Run linting
+uv run ruff check .
+
+# Format code
+uv run black .
 ```
 
 ## License
 
 MIT
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"Error: Unknown provider"**
+   - Check that you're using a supported provider name from the list above
+   - Provider names are case-insensitive
+
+2. **"Error: OpenAI API error"** 
+   - Verify your API key is correctly set in the environment variables
+   - Check that your API key has access to the requested model
+   - Ensure you have sufficient credits/quota
+
+3. **"Error: No image was generated"**
+   - This can happen if the image generation request fails
+   - Try a simpler prompt or different model (dall-e-2 vs dall-e-3)
+
+4. **Environment variables not working**
+   - Make sure to restart Claude Desktop after updating the configuration
+   - On macOS/Linux: Check file location at `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - On Windows: Check file location at `%APPDATA%\Claude\claude_desktop_config.json`
 
 ## Contributing
 

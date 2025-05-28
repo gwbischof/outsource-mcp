@@ -64,3 +64,34 @@ async def test_server_integration():
             else:
                 # If no API key, response should start with "Error"
                 assert actual_text.startswith("Error"), f"Expected error when no API key set, got: {actual_text}"
+            
+            # Test outsource_image
+            print("\n\nTesting outsource_image tool...")
+            result = await session.call_tool(
+                "outsource_image",
+                {
+                    "provider": "openai",
+                    "model": "dall-e-2",  # Use dall-e-2 as it's cheaper for testing
+                    "prompt": "A simple red circle on white background",
+                },
+            )
+            
+            # Check the result content
+            result_text = str(result.content)
+            print(f"Result (first 100 chars): {result_text[:100]}...")
+            
+            # Extract the actual text from the TextContent representation
+            if "text='" in result_text:
+                start = result_text.find("text='") + 6
+                end = result_text.find("'", start)
+                actual_text = result_text[start:end]
+            else:
+                actual_text = result_text
+            
+            if os.getenv("OPENAI_API_KEY"):
+                # If API key is set, we should get an image URL
+                assert not actual_text.startswith("Error"), f"Got error when API key was set: {actual_text}"
+                assert actual_text.startswith("https://"), f"Expected image URL, got: {actual_text[:50]}..."
+            else:
+                # If no API key, response should start with "Error"
+                assert actual_text.startswith("Error"), f"Expected error when no API key set, got: {actual_text}"

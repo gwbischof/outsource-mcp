@@ -114,29 +114,45 @@ async def outsource_image(provider: str, model: str, prompt: str) -> str:
         prompt: The image generation prompt
 
     Returns:
-        Base64 encoded image data or error message
+        Image URL or error message
     """
     try:
         provider_lower = provider.lower()
-
+        
         # Currently only OpenAI supports image generation through our integration
         if provider_lower == "openai":
             if model in ["dall-e-3", "dall-e-2"]:
                 import openai
-
-                client = openai.OpenAI()
-
-                # Generate image
-                response = client.images.generate(
-                    model=model,
-                    prompt=prompt,
-                    n=1,
-                    size="1024x1024" if model == "dall-e-3" else "512x512",
-                    response_format="b64_json",
-                )
-
-                # Return base64 encoded image
-                return f"data:image/png;base64,{response.data[0].b64_json}"
+                
+                # Use OpenAI directly for more control
+                client = openai.AsyncOpenAI()
+                
+                # Generate image with appropriate parameters for each model
+                try:
+                    if model == "dall-e-3":
+                        response = await client.images.generate(
+                            model=model,
+                            prompt=prompt,
+                            n=1,
+                            size="1024x1024",
+                            response_format="url"
+                        )
+                    else:  # dall-e-2
+                        response = await client.images.generate(
+                            model=model,
+                            prompt=prompt,
+                            n=1,
+                            size="512x512",
+                            response_format="url"
+                        )
+                    
+                    # Get the image URL
+                    image_url = response.data[0].url
+                    return image_url
+                                
+                except openai.OpenAIError as e:
+                    return f"Error: OpenAI API error - {str(e)}"
+                    
             else:
                 return f"Error: Model '{model}' is not a supported OpenAI image generation model. Supported models: dall-e-3, dall-e-2"
         else:
