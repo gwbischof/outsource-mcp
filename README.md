@@ -4,6 +4,9 @@ An MCP (Model Context Protocol) server that enables AI applications to outsource
 
 <img width="1154" alt="image" src="https://github.com/user-attachments/assets/cd364a7c-eae5-4c58-bc1f-fdeea6cb8434" />
 
+<img width="1103" alt="image" src="https://github.com/user-attachments/assets/55924981-83e9-4811-9f51-b049595b7505" />
+
+
 Compatible with any AI tool that supports the Model Context Protocol, including Claude Desktop, Cline, and other MCP-enabled applications.
 Built with [FastMCP](https://github.com/mcp/fastmcp) for the MCP server implementation and [Agno](https://github.com/agno-agi/agno) for AI agent capabilities.
 
