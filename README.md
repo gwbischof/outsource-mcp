@@ -6,6 +6,8 @@ Compatible with any AI tool that supports the Model Context Protocol, including 
 
 Built with [FastMCP](https://github.com/mcp/fastmcp) for the MCP server implementation and [Agno](https://github.com/agno-agi/agno) for AI agent capabilities.
 
+<img width="1154" alt="image" src="https://github.com/user-attachments/assets/cd364a7c-eae5-4c58-bc1f-fdeea6cb8434" />
+
 ## Features
 
 - 🤖 **Multi-Provider Support**: Access 20+ AI providers through a single interface
