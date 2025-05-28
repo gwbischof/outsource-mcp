@@ -64,15 +64,20 @@ PROVIDER_MODEL_MAP = {
 @mcp.tool()
 async def outsource_text(provider: str, model: str, prompt: str) -> str:
     """
-    Create an Agno agent with the specified provider and model to generate text.
+    Delegate text generation to another AI model. Use this when you need capabilities
+    or perspectives from a different model than yourself.
 
     Args:
-        provider: The provider name (e.g., "openai", "anthropic", "google")
-        model: The model name (e.g., "gpt-4o", "claude-3-5-sonnet-20241022")
-        prompt: The prompt to send to the model
+        provider: The AI provider to use (e.g., "openai", "anthropic", "google", "groq")
+        model: The specific model identifier (e.g., "gpt-4o", "claude-3-5-sonnet-20241022", "gemini-2.0-flash-exp")
+        prompt: The instruction or query to send to the external model
 
     Returns:
-        The generated text response
+        The text response from the external model, or an error message if the request fails
+
+    Example usage:
+        To get a different perspective: provider="anthropic", model="claude-3-5-sonnet-20241022", prompt="Analyze this problem from a different angle..."
+        To leverage specialized models: provider="deepseek", model="deepseek-coder", prompt="Write optimized Python code for..."
     """
     try:
         # Get the appropriate model class based on provider
@@ -106,27 +111,34 @@ async def outsource_text(provider: str, model: str, prompt: str) -> str:
 @mcp.tool()
 async def outsource_image(provider: str, model: str, prompt: str) -> str:
     """
-    Generate an image using the specified provider and model.
+    Delegate image generation to an external AI model. Use this when you need to create
+    visual content.
 
     Args:
-        provider: The provider name (e.g., "openai")
-        model: The model name (e.g., "dall-e-3", "dall-e-2")
-        prompt: The image generation prompt
+        provider: The AI provider to use (currently only "openai" is supported)
+        model: The image model to use ("dall-e-3" for high quality, "dall-e-2" for faster/cheaper)
+        prompt: A detailed description of the image you want to generate
 
     Returns:
-        Image URL or error message
+        The URL of the generated image, which can be shared with users or used in responses
+
+    Example usage:
+        For high-quality images: provider="openai", model="dall-e-3", prompt="A photorealistic rendering of..."
+        For quick concepts: provider="openai", model="dall-e-2", prompt="A simple sketch showing..."
+
+    Note: Only OpenAI currently supports image generation. Other providers will return an error.
     """
     try:
         provider_lower = provider.lower()
-        
+
         # Currently only OpenAI supports image generation through our integration
         if provider_lower == "openai":
             if model in ["dall-e-3", "dall-e-2"]:
                 import openai
-                
+
                 # Use OpenAI directly for more control
                 client = openai.AsyncOpenAI()
-                
+
                 # Generate image with appropriate parameters for each model
                 try:
                     if model == "dall-e-3":
@@ -145,14 +157,14 @@ async def outsource_image(provider: str, model: str, prompt: str) -> str:
                             size="512x512",
                             response_format="url"
                         )
-                    
+
                     # Get the image URL
                     image_url = response.data[0].url
                     return image_url
-                                
+
                 except openai.OpenAIError as e:
                     return f"Error: OpenAI API error - {str(e)}"
-                    
+
             else:
                 return f"Error: Model '{model}' is not a supported OpenAI image generation model. Supported models: dall-e-3, dall-e-2"
         else:
