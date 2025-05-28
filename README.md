@@ -12,56 +12,9 @@ Built with [FastMCP](https://github.com/mcp/fastmcp) for the MCP server implemen
 - 🔧 **Simple API**: Consistent interface with just three parameters: provider, model, and prompt
 - 🔑 **Flexible Authentication**: Only configure API keys for the providers you use
 
-## Installation
-
-### Quick Install with uvx
-
-```bash
-uvx --from git+https://github.com/gwbischof/outsource-mcp.git outsource-mcp
-```
-
-### Install from Source
-
-```bash
-git clone https://github.com/gwbischof/outsource-mcp.git
-cd outsource-mcp
-uv pip install -e .
-```
-
-## Quick Start
-
-Once installed and configured, you can use the tools in Claude Desktop:
-
-1. **Generate text**: "Use outsource_text with provider openai, model gpt-4o-mini, and prompt 'Write a haiku about coding'"
-2. **Generate images**: "Use outsource_image with provider openai, model dall-e-3, and prompt 'A futuristic city skyline at sunset'"
-
-## Tools
-
-### outsource_text
-Creates an Agno agent with a specified provider and model to generate text responses. 
-
-**Arguments:**
-- `provider`: The provider name (e.g., "openai", "anthropic", "google", "groq", etc.)
-- `model`: The model name (e.g., "gpt-4o", "claude-3-5-sonnet-20241022", "gemini-2.0-flash-exp")
-- `prompt`: The text prompt to send to the model
-
-### outsource_image
-Generates images using AI models.
-
-**Arguments:**
-- `provider`: The provider name (currently only "openai" is supported)
-- `model`: The model name ("dall-e-3" or "dall-e-2")
-- `prompt`: The image generation prompt
-
-Returns the URL of the generated image.
-
-> **Note**: Image generation is currently only supported by OpenAI models (DALL-E 2 and DALL-E 3). Other providers only support text generation.
-
 ## Configuration
 
-### Claude Desktop
-
-Add to your Claude Desktop configuration file:
+Add the folloing to your mcp configuration file:
 
 ```json
 {
@@ -96,18 +49,34 @@ Add to your Claude Desktop configuration file:
 
 Note: The environment variables are optional. Only include the API keys for the providers you want to use.
 
-Or for development:
+## Quick Start
 
-```json
-{
-  "mcpServers": {
-    "outsource-mcp": {
-      "command": "uv",
-      "args": ["run", "server.py"]
-    }
-  }
-}
-```
+Once installed and configured, you can use the tools in Claude Desktop:
+
+1. **Generate text**: "Use outsource_text with provider openai, model gpt-4o-mini, and prompt 'Write a haiku about coding'"
+2. **Generate images**: "Use outsource_image with provider openai, model dall-e-3, and prompt 'A futuristic city skyline at sunset'"
+
+## Tools
+
+### outsource_text
+Creates an Agno agent with a specified provider and model to generate text responses. 
+
+**Arguments:**
+- `provider`: The provider name (e.g., "openai", "anthropic", "google", "groq", etc.)
+- `model`: The model name (e.g., "gpt-4o", "claude-3-5-sonnet-20241022", "gemini-2.0-flash-exp")
+- `prompt`: The text prompt to send to the model
+
+### outsource_image
+Generates images using AI models.
+
+**Arguments:**
+- `provider`: The provider name (currently only "openai" is supported)
+- `model`: The model name ("dall-e-3" or "dall-e-2")
+- `prompt`: The image generation prompt
+
+Returns the URL of the generated image.
+
+> **Note**: Image generation is currently only supported by OpenAI models (DALL-E 2 and DALL-E 3). Other providers only support text generation.
 
 ## Supported Providers
 
@@ -237,29 +206,9 @@ The test suite includes integration tests that verify both text and image genera
 ```bash
 # Run all tests
 uv run pytest
-
-# Run with verbose output
-uv run pytest -v
-
-# Run specific test
-uv run pytest test_server.py::test_server_integration
 ```
 
 **Note:** Integration tests require API keys to be set in your environment.
-
-### Code Quality
-
-```bash
-# Run linting
-uv run ruff check .
-
-# Format code
-uv run black .
-```
-
-## License
-
-MIT
 
 ## Troubleshooting
 
