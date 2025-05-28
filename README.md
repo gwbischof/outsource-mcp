@@ -1,4 +1,4 @@
-# outsource-mcp
+# Outsource MCP
 
 An MCP (Model Context Protocol) server that enables AI applications to outsource tasks to various model providers through a unified interface.
 
