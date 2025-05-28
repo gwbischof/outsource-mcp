@@ -7,10 +7,22 @@ This project uses [Agno](https://github.com/agno-agi/agno), a powerful framework
 ## Tools
 
 ### outsource_text
-Creates an Agno agent with a specified model to generate text responses. Pass any supported model name and a prompt to get AI-generated content. The tool automatically routes to the appropriate provider based on the model name.
+Creates an Agno agent with a specified provider and model to generate text responses. 
+
+**Arguments:**
+- `provider`: The provider name (e.g., "openai", "anthropic", "google", "groq", etc.)
+- `model`: The model name (e.g., "gpt-4o", "claude-3-5-sonnet-20241022", "gemini-2.0-flash-exp")
+- `prompt`: The text prompt to send to the model
 
 ### outsource_image
-Generates images using AI models. Currently supports DALL-E 3 and DALL-E 2 for image generation. Returns base64 encoded image data that can be directly used in applications.
+Generates images using AI models. Currently supports OpenAI's DALL-E models.
+
+**Arguments:**
+- `provider`: The provider name (currently only "openai" is supported)
+- `model`: The model name ("dall-e-3" or "dall-e-2")
+- `prompt`: The image generation prompt
+
+Returns base64 encoded image data that can be directly used in applications.
 
 ## Claude Desktop Integration
 

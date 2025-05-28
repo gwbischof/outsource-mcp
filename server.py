@@ -1,14 +1,3 @@
-"""
-MCP server for outsourcing tasks to AI agents.
-
-This server provides tools to:
-1. Detect available AI models based on environment variables
-2. Generate images using Agno agents with specified models
-3. Generate text using Agno agents with specified models
-"""
-
-import os
-
 from mcp.server.fastmcp import FastMCP
 from agno.agent import Agent
 
@@ -40,92 +29,45 @@ from agno.models.ibm import WatsonX
 # Create the MCP server instance
 mcp = FastMCP("outsource-mcp")
 
-
-def get_model_class(model_name: str):
-    """Get the appropriate model class based on model name."""
-    # OpenAI models
-    if model_name.startswith(("gpt", "dall-e")):
-        return OpenAIChat
-    # Anthropic models
-    elif model_name.startswith("claude"):
-        return Claude
-    # Google models
-    elif model_name.startswith("gemini"):
-        return Gemini
-    # Groq models
-    elif any(model_name.startswith(x) for x in ["llama-3.3", "llama-3.1", "mixtral"]):
-        return Groq
-    # DeepSeek models
-    elif model_name.startswith("deepseek"):
-        return DeepSeek
-    # xAI models
-    elif model_name.startswith("grok"):
-        return xAI
-    # Perplexity models
-    elif model_name.startswith("sonar"):
-        return Perplexity
-    # Cohere models
-    elif model_name.startswith("command"):
-        return Cohere
-    # Fireworks models
-    elif "fireworks" in model_name:
-        return Fireworks
-    # HuggingFace models
-    elif "/" in model_name and "llama" in model_name.lower():
-        return HuggingFace
-    # Mistral models
-    elif model_name.startswith("mistral"):
-        return MistralChat
-    # NVIDIA models
-    elif model_name.startswith("meta/"):
-        return Nvidia
-    # Ollama models (local)
-    elif model_name in ["llama3", "mistral", "codellama"]:
-        return Ollama
-    # OpenRouter models
-    elif "/" in model_name and any(x in model_name for x in ["openai/", "anthropic/"]):
-        return OpenRouter
-    # Together models
-    elif "togethercomputer/" in model_name:
-        return Together
-    # Cerebras models
-    elif model_name.startswith("llama3.1"):
-        return Cerebras
-    # DeepInfra models
-    elif "meta-llama/" in model_name:
-        return DeepInfra
-    # SambaNova models
-    elif "Meta-Llama" in model_name:
-        return Sambanova
-    # LiteLLM models
-    elif "litellm" in model_name.lower():
-        return LiteLLM
-    # Vercel v0 models
-    elif "v0" in model_name.lower():
-        return v0
-    # AWS Bedrock models
-    elif "bedrock" in model_name.lower() or model_name.startswith("amazon."):
-        return AwsBedrock
-    # Azure AI Foundry models
-    elif "azure" in model_name.lower() or model_name.startswith("microsoft"):
-        return AzureAIFoundry
-    # Meta Llama models
-    elif model_name.startswith("meta-llama/") and "LLAMA_API_KEY" in os.environ:
-        return Llama
-    # IBM WatsonX models
-    elif "watsonx" in model_name.lower() or "watson" in model_name.lower():
-        return WatsonX
-    else:
-        raise ValueError(f"Unknown model: {model_name}")
-
+# Provider to model class mapping
+PROVIDER_MODEL_MAP = {
+    "openai": OpenAIChat,
+    "anthropic": Claude,
+    "google": Gemini,
+    "groq": Groq,
+    "deepseek": DeepSeek,
+    "xai": xAI,
+    "perplexity": Perplexity,
+    "cohere": Cohere,
+    "fireworks": Fireworks,
+    "huggingface": HuggingFace,
+    "mistral": MistralChat,
+    "nvidia": Nvidia,
+    "ollama": Ollama,
+    "openrouter": OpenRouter,
+    "sambanova": Sambanova,
+    "together": Together,
+    "litellm": LiteLLM,
+    "vercel": v0,
+    "v0": v0,
+    "aws": AwsBedrock,
+    "bedrock": AwsBedrock,
+    "azure": AzureAIFoundry,
+    "cerebras": Cerebras,
+    "meta": Llama,
+    "deepinfra": DeepInfra,
+    "ibm": WatsonX,
+    "watsonx": WatsonX,
+}
 
 
 @mcp.tool()
-async def outsource_text(model: str, prompt: str) -> str:
+async def outsource_text(provider: str, model: str, prompt: str) -> str:
     """
-    Create an Agno agent with the specified model and generate text.
+    Create an Agno agent with the specified provider and model to generate text.
 
     Args:
+        provider: The provider name (e.g., "openai", "anthropic", "google")
         model: The model name (e.g., "gpt-4o", "claude-3-5-sonnet-20241022")
         prompt: The prompt to send to the model
 
@@ -133,8 +75,13 @@ async def outsource_text(model: str, prompt: str) -> str:
         The generated text response
     """
     try:
-        # Get the appropriate model class
-        model_class = get_model_class(model)
+        # Get the appropriate model class based on provider
+        provider_lower = provider.lower()
+
+        if provider_lower not in PROVIDER_MODEL_MAP:
+            raise ValueError(f"Unknown provider: {provider}")
+
+        model_class = PROVIDER_MODEL_MAP[provider_lower]
 
         # Create the agent
         agent = Agent(
@@ -157,11 +104,12 @@ async def outsource_text(model: str, prompt: str) -> str:
 
 
 @mcp.tool()
-async def outsource_image(model: str, prompt: str) -> str:
+async def outsource_image(provider: str, model: str, prompt: str) -> str:
     """
-    Create an Agno agent with the specified model and generate an image.
+    Generate an image using the specified provider and model.
 
     Args:
+        provider: The provider name (e.g., "openai")
         model: The model name (e.g., "dall-e-3", "dall-e-2")
         prompt: The image generation prompt
 
@@ -169,28 +117,30 @@ async def outsource_image(model: str, prompt: str) -> str:
         Base64 encoded image data or error message
     """
     try:
-        # For OpenAI image generation, we need to use their API directly
-        # as Agno agents are primarily for text-based interactions
-        if model in ["dall-e-3", "dall-e-2"]:
-            import openai
+        provider_lower = provider.lower()
 
-            client = openai.OpenAI()
+        # Currently only OpenAI supports image generation through our integration
+        if provider_lower == "openai":
+            if model in ["dall-e-3", "dall-e-2"]:
+                import openai
 
-            # Generate image
-            response = client.images.generate(
-                model=model,
-                prompt=prompt,
-                n=1,
-                size="1024x1024" if model == "dall-e-3" else "512x512",
-                response_format="b64_json",
-            )
+                client = openai.OpenAI()
 
-            # Return base64 encoded image
-            return f"data:image/png;base64,{response.data[0].b64_json}"
+                # Generate image
+                response = client.images.generate(
+                    model=model,
+                    prompt=prompt,
+                    n=1,
+                    size="1024x1024" if model == "dall-e-3" else "512x512",
+                    response_format="b64_json",
+                )
+
+                # Return base64 encoded image
+                return f"data:image/png;base64,{response.data[0].b64_json}"
+            else:
+                return f"Error: Model '{model}' is not a supported OpenAI image generation model. Supported models: dall-e-3, dall-e-2"
         else:
-            return (
-                f"Error: Image generation for model '{model}' is not yet implemented."
-            )
+            return f"Error: Provider '{provider}' does not support image generation through this tool. Currently only 'openai' is supported."
 
     except Exception as e:
         return f"Error generating image: {str(e)}"

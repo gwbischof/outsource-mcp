@@ -39,6 +39,7 @@ async def test_server_integration():
                 result = await session.call_tool(
                     "outsource_text",
                     {
+                        "provider": "openai",
                         "model": "gpt-4o-mini",
                         "prompt": "Write a haiku about MCP servers",
                     },
@@ -49,6 +50,7 @@ async def test_server_integration():
                 result = await session.call_tool(
                     "outsource_text",
                     {
+                        "provider": "openai",
                         "model": "gpt-4o-mini",
                         "prompt": "Write a haiku about MCP servers",
                     },
