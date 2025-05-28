@@ -16,9 +16,7 @@ Built with [FastMCP](https://github.com/mcp/fastmcp) for the MCP server implemen
 
 ## Configuration
 
-### For Claude Desktop
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+Add the following configuration to your MCP client. Consult your MCP client's documentation for specific configuration details.
 
 ```json
 {
@@ -52,19 +50,6 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 ```
 
 Note: The environment variables are optional. Only include the API keys for the providers you want to use.
-
-### For Other MCP Clients
-
-The configuration format may vary depending on your MCP client. Generally, you'll need to specify:
-- **Command**: `uvx`
-- **Arguments**: `["--from", "git+https://github.com/gwbischof/outsource-mcp.git", "outsource-mcp"]`
-- **Environment variables**: Your API keys
-
-For development or local installation:
-- **Command**: `uv`
-- **Arguments**: `["run", "/path/to/outsource-mcp/server.py"]`
-
-Consult your MCP client's documentation for specific configuration details.
 
 ## Quick Start
 
