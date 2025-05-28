@@ -1,0 +1,175 @@
+name: outsource-mcp
+version: 1.0.0
+description: MCP server that delegates text generation and image creation to external AI models
+author: gbischof
+license: MIT
+
+# MCP server configuration
+mcp:
+  # Server metadata
+  server:
+    command: python
+    args:
+      - server.py
+    # Environment variables can be configured at runtime
+    env:
+      # These will be populated from Smithery secrets
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      GROQ_API_KEY: ${GROQ_API_KEY}
+      TOGETHER_API_KEY: ${TOGETHER_API_KEY}
+      AZURE_API_KEY: ${AZURE_API_KEY}
+      COHERE_API_KEY: ${COHERE_API_KEY}
+      AI21_API_KEY: ${AI21_API_KEY}
+      ALEPHALPHA_API_KEY: ${ALEPHALPHA_API_KEY}
+      BASETEN_API_KEY: ${BASETEN_API_KEY}
+      DATABRICKS_API_KEY: ${DATABRICKS_API_KEY}
+      DEEPINFRA_API_KEY: ${DEEPINFRA_API_KEY}
+      FIREWORKS_API_KEY: ${FIREWORKS_API_KEY}
+      FRIENDLIAI_API_KEY: ${FRIENDLIAI_API_KEY}
+      HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY}
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY}
+      NLP_CLOUD_API_KEY: ${NLP_CLOUD_API_KEY}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      PERPLEXITY_API_KEY: ${PERPLEXITY_API_KEY}
+      REPLICATE_API_KEY: ${REPLICATE_API_KEY}
+      SAGEMAKER_API_KEY: ${SAGEMAKER_API_KEY}
+      VLLM_API_KEY: ${VLLM_API_KEY}
+      VOYAGE_API_KEY: ${VOYAGE_API_KEY}
+      XINFERENCE_API_KEY: ${XINFERENCE_API_KEY}
+      # AWS credentials for Bedrock
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+
+  # Tools provided by this server
+  tools:
+    - name: outsource_text
+      description: Delegate text generation to another AI model
+      inputSchema:
+        type: object
+        properties:
+          provider:
+            type: string
+            description: The model provider (e.g., openai, anthropic, google)
+          model:
+            type: string
+            description: The specific model to use (e.g., gpt-4, claude-3-opus)
+          prompt:
+            type: string
+            description: The prompt to send to the model
+        required:
+          - provider
+          - model
+          - prompt
+    
+    - name: outsource_image
+      description: Generate an image using DALL-E models
+      inputSchema:
+        type: object
+        properties:
+          provider:
+            type: string
+            description: The image generation provider (currently only 'openai' supported)
+          model:
+            type: string
+            description: The DALL-E model to use (dall-e-2 or dall-e-3)
+          prompt:
+            type: string
+            description: The image generation prompt
+        required:
+          - provider
+          - model
+          - prompt
+
+# Docker configuration
+docker:
+  # Use the Dockerfile in the repository
+  dockerfile: Dockerfile
+  # Build context is the root directory
+  context: .
+
+# Required secrets (users will configure these in Smithery)
+secrets:
+  - name: OPENAI_API_KEY
+    description: OpenAI API key for GPT and DALL-E models
+    required: false
+  - name: ANTHROPIC_API_KEY
+    description: Anthropic API key for Claude models
+    required: false
+  - name: GOOGLE_API_KEY
+    description: Google API key for Gemini models
+    required: false
+  - name: GROQ_API_KEY
+    description: Groq API key
+    required: false
+  - name: TOGETHER_API_KEY
+    description: Together AI API key
+    required: false
+  - name: AZURE_API_KEY
+    description: Azure OpenAI API key
+    required: false
+  - name: COHERE_API_KEY
+    description: Cohere API key
+    required: false
+  - name: AI21_API_KEY
+    description: AI21 Labs API key
+    required: false
+  - name: ALEPHALPHA_API_KEY
+    description: Aleph Alpha API key
+    required: false
+  - name: BASETEN_API_KEY
+    description: Baseten API key
+    required: false
+  - name: DATABRICKS_API_KEY
+    description: Databricks API key
+    required: false
+  - name: DEEPINFRA_API_KEY
+    description: DeepInfra API key
+    required: false
+  - name: FIREWORKS_API_KEY
+    description: Fireworks AI API key
+    required: false
+  - name: FRIENDLIAI_API_KEY
+    description: FriendliAI API key
+    required: false
+  - name: HUGGINGFACE_API_KEY
+    description: Hugging Face API key
+    required: false
+  - name: MISTRAL_API_KEY
+    description: Mistral AI API key
+    required: false
+  - name: NLP_CLOUD_API_KEY
+    description: NLP Cloud API key
+    required: false
+  - name: OPENROUTER_API_KEY
+    description: OpenRouter API key
+    required: false
+  - name: PERPLEXITY_API_KEY
+    description: Perplexity AI API key
+    required: false
+  - name: REPLICATE_API_KEY
+    description: Replicate API key
+    required: false
+  - name: SAGEMAKER_API_KEY
+    description: Amazon SageMaker API key
+    required: false
+  - name: VLLM_API_KEY
+    description: vLLM API key
+    required: false
+  - name: VOYAGE_API_KEY
+    description: Voyage AI API key
+    required: false
+  - name: XINFERENCE_API_KEY
+    description: Xinference API key
+    required: false
+  - name: AWS_ACCESS_KEY_ID
+    description: AWS access key for Bedrock
+    required: false
+  - name: AWS_SECRET_ACCESS_KEY
+    description: AWS secret key for Bedrock
+    required: false
+  - name: AWS_REGION
+    description: AWS region for Bedrock
+    required: false
