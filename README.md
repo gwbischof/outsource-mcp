@@ -1,6 +1,8 @@
 # outsource-mcp
 
-An MCP (Model Context Protocol) server that enables you to outsource AI tasks to various model providers through a unified interface.
+An MCP (Model Context Protocol) server that enables AI applications to outsource tasks to various model providers through a unified interface.
+
+Compatible with any AI tool that supports the Model Context Protocol, including Claude Desktop, Cline, and other MCP-enabled applications.
 
 Built with [FastMCP](https://github.com/mcp/fastmcp) for the MCP server implementation and [Agno](https://github.com/agno-agi/agno) for AI agent capabilities.
 
@@ -14,7 +16,9 @@ Built with [FastMCP](https://github.com/mcp/fastmcp) for the MCP server implemen
 
 ## Configuration
 
-Add the folloing to your mcp configuration file:
+### For Claude Desktop
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
 
 ```json
 {
@@ -49,12 +53,25 @@ Add the folloing to your mcp configuration file:
 
 Note: The environment variables are optional. Only include the API keys for the providers you want to use.
 
+### For Other MCP Clients
+
+The configuration format may vary depending on your MCP client. Generally, you'll need to specify:
+- **Command**: `uvx`
+- **Arguments**: `["--from", "git+https://github.com/gwbischof/outsource-mcp.git", "outsource-mcp"]`
+- **Environment variables**: Your API keys
+
+For development or local installation:
+- **Command**: `uv`
+- **Arguments**: `["run", "/path/to/outsource-mcp/server.py"]`
+
+Consult your MCP client's documentation for specific configuration details.
+
 ## Quick Start
 
-Once installed and configured, you can use the tools in Claude Desktop:
+Once installed and configured, you can use the tools in your MCP client:
 
-1. **Generate text**: "Use outsource_text with provider openai, model gpt-4o-mini, and prompt 'Write a haiku about coding'"
-2. **Generate images**: "Use outsource_image with provider openai, model dall-e-3, and prompt 'A futuristic city skyline at sunset'"
+1. **Generate text**: Use the `outsource_text` tool with provider "openai", model "gpt-4o-mini", and prompt "Write a haiku about coding"
+2. **Generate images**: Use the `outsource_image` tool with provider "openai", model "dall-e-3", and prompt "A futuristic city skyline at sunset"
 
 ## Tools
 
@@ -228,9 +245,9 @@ uv run pytest
    - Try a simpler prompt or different model (dall-e-2 vs dall-e-3)
 
 4. **Environment variables not working**
-   - Make sure to restart Claude Desktop after updating the configuration
-   - On macOS/Linux: Check file location at `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - On Windows: Check file location at `%APPDATA%\Claude\claude_desktop_config.json`
+   - Make sure to restart your MCP client after updating the configuration
+   - Verify the configuration file location for your specific MCP client
+   - Check that the environment variables are properly formatted in the configuration
 
 ## Contributing
 
