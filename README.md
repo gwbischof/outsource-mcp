@@ -1,8 +1,8 @@
 # outsource-mcp
 
-An MCP server that allows you to outsource tasks to other models.
+An MCP server that allows you to outsource AI tasks to various model providers.
 
-This project uses [Agno](https://github.com/agno-agi/agno), a powerful framework for building AI agents with tool use capabilities. For more information on working with multimodal agents (text and image generation), see the [Agno multimodal documentation](https://docs.agno.com/agents/multimodal).
+This project uses [Agno](https://github.com/agno-agi/agno), a powerful framework for building AI agents with tool use capabilities.
 
 ## Tools
 
@@ -74,37 +74,74 @@ Or for development:
 }
 ```
 
-## Supported Models
+## Supported Providers
 
-This MCP server supports all models available through [Agno](https://docs.agno.com/models/introduction#supported-models):
+The following providers are supported. Use the provider name (in parentheses) as the `provider` argument:
 
-You can follow the link to get a list of available models:
-*   **OpenAI:** [https://platform.openai.com/docs/models](https://platform.openai.com/docs/models)
-*   **Anthropic:** [https://docs.anthropic.com/en/docs/about-claude/models/overview](https://docs.anthropic.com/en/docs/about-claude/models/overview)
-*   **Google:** [https://ai.google.dev/models](https://ai.google.dev/models)
-*   **Groq:** [https://console.groq.com/docs/models](https://console.groq.com/docs/models)
-*   **DeepSeek:** [https://api-docs.deepseek.com/api/list-models](https://api-docs.deepseek.com/api/list-models) 
-*   **xAI:** [https://docs.x.ai/docs/models](https://docs.x.ai/docs/models)
-*   **Perplexity:** [https://docs.perplexity.ai/guides/model-cards](https://docs.perplexity.ai/guides/model-cards)
-*   **Cohere:** [https://docs.cohere.com/v2/docs/models](https://docs.cohere.com/v2/docs/models)
-*   **Mistral AI:** [https://docs.mistral.ai/getting-started/models/models_overview/](https://docs.mistral.ai/getting-started/models/models_overview/)
-*   **NVIDIA:** [https://build.nvidia.com/models](https://build.nvidia.com/models)
-*   **HuggingFace:** [https://huggingface.co/models](https://huggingface.co/models)
-*   **Ollama:** [https://ollama.com/library](https://ollama.com/library)
-*   **Fireworks AI:** [https://fireworks.ai/models?view=list](https://fireworks.ai/models?view=list)
-*   **OpenRouter:** [https://openrouter.ai/docs/overview/models](https://openrouter.ai/docs/overview/models)
-*   **Together AI:** [https://docs.together.ai/docs/serverless-models](https://docs.together.ai/docs/serverless-models)
-*   **Cerebras:** [https://training-api.cerebras.ai/en/latest/wsc/Model-zoo/Components/model_zoo_registry.html](https://training-api.cerebras.ai/en/latest/wsc/Model-zoo/Components/model_zoo_registry.html)
-*   **DeepInfra:** [https://deepinfra.com/docs/models](https://deepinfra.com/docs/models)
-*   **SambaNova Systems:** [https://docs.sambanova.ai/cloud/docs/get-started/supported-models](https://docs.sambanova.ai/cloud/docs/get-started/supported-models)
-*   **AWS Bedrock:** [https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html) 
-*   **Azure AI:** [https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/foundry-models-overview](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/foundry-models-overview)
-*   **IBM WatsonX:** [https://www.ibm.com/docs/en/software-hub/5.1.x?topic=install-foundation-models](https://www.ibm.com/docs/en/software-hub/5.1.x?topic=install-foundation-models)
-*   **LiteLLM:** [https://docs.litellm.ai/docs/providers](https://docs.litellm.ai/docs/providers)
-*   **Vercel AI SDK:** [https://sdk.vercel.ai/docs/introduction](https://sdk.vercel.ai/docs/introduction)
-*   **Meta Llama:** [https://www.llama.com/get-started/](https://www.llama.com/get-started/)
+### Core Providers
+- **OpenAI** (`openai`) - GPT-4, GPT-3.5, DALL-E, etc. | [Models](https://platform.openai.com/docs/models)
+- **Anthropic** (`anthropic`) - Claude 3.5, Claude 3, etc. | [Models](https://docs.anthropic.com/en/docs/about-claude/models/overview)
+- **Google** (`google`) - Gemini Pro, Gemini Flash, etc. | [Models](https://ai.google.dev/models)
+- **Groq** (`groq`) - Llama 3, Mixtral, etc. | [Models](https://console.groq.com/docs/models)
+- **DeepSeek** (`deepseek`) - DeepSeek Chat & Coder | [Models](https://api-docs.deepseek.com/api/list-models)
+- **xAI** (`xai`) - Grok models | [Models](https://docs.x.ai/docs/models)
+- **Perplexity** (`perplexity`) - Sonar models | [Models](https://docs.perplexity.ai/guides/model-cards)
+
+### Additional Providers
+- **Cohere** (`cohere`) - Command models | [Models](https://docs.cohere.com/v2/docs/models)
+- **Mistral AI** (`mistral`) - Mistral Large, Medium, Small | [Models](https://docs.mistral.ai/getting-started/models/models_overview/)
+- **NVIDIA** (`nvidia`) - Various models | [Models](https://build.nvidia.com/models)
+- **HuggingFace** (`huggingface`) - Open source models | [Models](https://huggingface.co/models)
+- **Ollama** (`ollama`) - Local models | [Models](https://ollama.com/library)
+- **Fireworks AI** (`fireworks`) - Fast inference | [Models](https://fireworks.ai/models?view=list)
+- **OpenRouter** (`openrouter`) - Multi-provider access | [Models](https://openrouter.ai/docs/overview/models)
+- **Together AI** (`together`) - Open source models | [Models](https://docs.together.ai/docs/serverless-models)
+- **Cerebras** (`cerebras`) - Fast inference | [Models](https://cerebras.ai/models)
+- **DeepInfra** (`deepinfra`) - Optimized models | [Models](https://deepinfra.com/docs/models)
+- **SambaNova** (`sambanova`) - Enterprise models | [Models](https://docs.sambanova.ai/cloud/docs/get-started/supported-models)
+
+### Enterprise Providers
+- **AWS Bedrock** (`aws` or `bedrock`) - AWS-hosted models | [Models](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html)
+- **Azure AI** (`azure`) - Azure-hosted models | [Models](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/foundry-models-overview)
+- **IBM WatsonX** (`ibm` or `watsonx`) - IBM models | [Models](https://www.ibm.com/docs/en/software-hub/5.1.x?topic=install-foundation-models)
+- **LiteLLM** (`litellm`) - Universal interface | [Models](https://docs.litellm.ai/docs/providers)
+- **Vercel v0** (`vercel` or `v0`) - Vercel AI | [Models](https://sdk.vercel.ai/docs/introduction)
+- **Meta Llama** (`meta`) - Direct Meta access | [Models](https://www.llama.com/get-started/)
 
 Note: Each provider requires its corresponding API key to be set as an environment variable.
+
+## Examples
+
+### Text Generation
+```
+# Using OpenAI
+provider: openai
+model: gpt-4o-mini
+prompt: Write a haiku about coding
+
+# Using Anthropic
+provider: anthropic
+model: claude-3-5-sonnet-20241022
+prompt: Explain quantum computing in simple terms
+
+# Using Google
+provider: google
+model: gemini-2.0-flash-exp
+prompt: Create a recipe for chocolate chip cookies
+```
+
+### Image Generation
+```
+# Using DALL-E 3
+provider: openai
+model: dall-e-3
+prompt: A serene Japanese garden with cherry blossoms
+
+# Using DALL-E 2
+provider: openai
+model: dall-e-2
+prompt: A futuristic cityscape at sunset
+```
 
 ## Development
 
