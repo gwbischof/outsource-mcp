@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/gwbischof-outsource-mcp-badge.png)](https://mseep.ai/app/gwbischof-outsource-mcp)
+
 # Outsource MCP
 
 An MCP (Model Context Protocol) server that enables AI applications to outsource tasks to various model providers through a unified interface.
